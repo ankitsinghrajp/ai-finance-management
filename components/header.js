@@ -9,7 +9,7 @@ import { LayoutDashboard, PenBox } from 'lucide-react'
 const Header = () => {
   return (
     <div className='fixed top-0 z-50 w-full bg-[#edefef]/80 dark:bg-black/80 border-b border-dotted border-gray-600 '>
-      <nav className=' container mx-auto px-4 py-4 flex items-center justify-between'>
+      <nav className=' container mx-auto px-4 py-5 flex items-center justify-between'>
 
     <Link href={'/'} className='flex items-center gap-2 font-bold bg-gradient-to-r from-white/10 to-white/5 backdrop-blur-2xl border border-white/20 text-gray-800 dark:text-white px-3 py-2 rounded-2xl shadow-xl hover:shadow-xl hover:bg-gradient-to-r hover:from-white/20 hover:to-white/10 hover:border-white/30 hover:scale-105 hover:-translate-y-2 transition-all duration-500 group relative overflow-hidden'>
   <div className='absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>

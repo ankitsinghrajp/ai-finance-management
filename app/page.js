@@ -11,7 +11,7 @@ export default function HOME() {
   return (
     <>
       <div className="mt-20 px-4">
-        <div className="fixed top-20 z-50 py-1 right-3">
+        <div className="fixed top-24 z-50 py-1 right-4">
           <ToggleTheme />
         </div>
         {/* Hero Section */}
