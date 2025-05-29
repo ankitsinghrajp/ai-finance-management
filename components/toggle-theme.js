@@ -15,7 +15,6 @@ export function ToggleTheme() {
 
   React.useEffect(() => {
     if (!hasMounted) return
-
     if (isDark) {
       document.documentElement.classList.add("dark")
     } else {
@@ -25,7 +24,6 @@ export function ToggleTheme() {
 
   const toggleTheme = () => {
     setIsAnimating(true)
-
     setTimeout(() => {
       setIsDark((prev) => !prev)
       setTimeout(() => {
@@ -103,33 +101,31 @@ export function ToggleTheme() {
         </div>
       </div>
 
-      {/* Theme Toggle Button - Top Right Corner */}
-      <div className="fixed top-4 right-4 z-50">
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={toggleTheme}
-          disabled={isAnimating}
-          className={`relative h-12 w-12 rounded-full transition-all duration-300 hover:scale-110 ${
-            isAnimating ? "animate-spin" : ""
-          } ${
-            isDark
-              ? "bg-slate-800 border-yellow-400 text-yellow-400 shadow-lg shadow-yellow-400/25"
-              : "bg-white border-purple-400 text-purple-600 shadow-lg shadow-purple-400/25"
+      {/* Theme Toggle Button - now free to place in Navbar */}
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={toggleTheme}
+        disabled={isAnimating}
+        className={`relative cursor-pointer rounded-full transition-all duration-300 hover:scale-110 ${
+          isAnimating ? "animate-spin" : ""
+        } ${
+          isDark
+            ? "bg-slate-800 border-yellow-400 text-yellow-400 "
+            : "bg-white border-purple-400 text-purple-600 "
+        }`}
+      >
+        <Sun
+          className={`h-[1.2rem] w-[1.2rem] transition-all duration-500 ${
+            isDark ? "-rotate-90 scale-0" : "rotate-0 scale-100"
           }`}
-        >
-          <Sun
-            className={`h-[1.2rem] w-[1.2rem] transition-all duration-500 ${
-              isDark ? "-rotate-90 scale-0" : "rotate-0 scale-100"
-            }`}
-          />
-          <Moon
-            className={`absolute h-[1.2rem] w-[1.2rem] transition-all duration-500 ${
-              isDark ? "rotate-0 scale-100" : "rotate-90 scale-0"
-            }`}
-          />
-        </Button>
-      </div>
+        />
+        <Moon
+          className={`absolute h-[1.2rem] w-[1.2rem] transition-all duration-500 ${
+            isDark ? "rotate-0 scale-100" : "rotate-90 scale-0"
+          }`}
+        />
+      </Button>
     </>
   )
 }
