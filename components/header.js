@@ -1,12 +1,13 @@
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs'
 import React from 'react'
-import { ToggleTheme } from './toggle-theme'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from './ui/button'
 import { LayoutDashboard, PenBox } from 'lucide-react'
+import { checkUser } from '@/lib/checkUser'
 
-const Header = () => {
+const Header = async () => {
+  await checkUser();
   return (
     <div className='fixed top-0 z-50 w-full bg-[#edefef]/80 dark:bg-black/80 border-b border-dotted border-gray-600 '>
       <nav className=' container mx-auto px-4 py-5 flex items-center justify-between'>
