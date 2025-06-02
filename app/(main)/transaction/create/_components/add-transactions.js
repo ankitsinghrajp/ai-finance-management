@@ -28,6 +28,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import ReceiptScanner from "./receipt-scanner";
 
 const AddTransactionForm = ({ accounts, categories }) => {
   const router = useRouter();
@@ -83,15 +84,31 @@ const AddTransactionForm = ({ accounts, categories }) => {
      
   },[transactionResult,transactionLoading])
 
+  const handleScanComplete = async(scannedData)=>{
+    setValue("amount", scannedData.amount.toString());
+    setValue("date",new Date(scannedData.date));
+
+    if(scannedData.description){
+      setValue("description",scannedData.description);
+    }
+    
+    if(scannedData.category){
+      setValue("category",scannedData.category);
+      console.log("The category is: ",scannedData.category);
+    }
+
+  }
   return (
     <form className="space-y-6" onSubmit={handleSubmit(onsubmit)}>
       {/* AI Receipt Scanner  */}
+
+      <ReceiptScanner onScanComplete={handleScanComplete} />
 
       <div className="space-y-2">
         <label className="text-md font-medium text-gray-800 dark:text-gray-300">
           Type
         </label>
-        <Select className="" onValueChange={(value) => setValue("type", value)}>
+        <Select className="" defaultValue={"EXPENSE"} onValueChange={(value) => setValue("type", value)}>
           <SelectTrigger className="mt-2 border-2 w-full border-gray-400 dark:border-gray-700">
             <SelectValue placeholder="Select Type" />
           </SelectTrigger>

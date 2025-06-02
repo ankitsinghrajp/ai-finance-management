@@ -236,7 +236,7 @@ const TransactionTable = ({ transactions }) => {
       </div>
 
       {/* Transactions Table */}
-      <div className="rounded-md border md:ml-20 my-5">
+      <div className="rounded-md border max-h-[500px] overflow-y-scroll md:ml-20 my-5">
         <Table>
           <TableHeader>
             <TableRow>
@@ -301,7 +301,8 @@ const TransactionTable = ({ transactions }) => {
               <TableHead className={"w-[50px]"} />
             </TableRow>
           </TableHeader>
-          <TableBody>
+    
+          <TableBody className={''}>
             {filteredAndSortedTransactions.length === 0 ? (
               <TableRow>
                 <TableCell

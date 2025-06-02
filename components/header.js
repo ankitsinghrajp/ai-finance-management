@@ -1,10 +1,11 @@
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs'
-import React from 'react'
+import React, { Suspense } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from './ui/button'
 import { LayoutDashboard, PenBox } from 'lucide-react'
 import { checkUser } from '@/lib/checkUser'
+import { ClockLoader } from 'react-spinners'
 
 const Header = async () => {
   await checkUser();
@@ -38,8 +39,8 @@ const Header = async () => {
                 <span className='hidden text-sm md:block'>Dashboard</span>
               </Button>
               </Link>
-
-              <Link href={'/transaction/create'}>
+            
+                  <Link href={'/transaction/create'}>
               <Button className={'font-semibold dark:text-gray-900 dark:hover:text-blue-600 text-gray-100 cursor-pointer hover:text-blue-500 flex gap-1 items-center'}>
                 <PenBox className='h-3 w-3'/>
                 <span className='hidden text-sm md:block'>Add Transaction</span>
