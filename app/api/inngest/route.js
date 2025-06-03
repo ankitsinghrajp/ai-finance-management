@@ -5,6 +5,6 @@ import { checkBudgetAlerts } from "@/lib/inngest/functions";
 export const { GET, POST, PUT } = serve({
   client: inngest,
   functions: [
-   checkBudgetAlerts
+   checkBudgetAlerts,
   ],
 });

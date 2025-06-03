@@ -1,6 +1,6 @@
 "use client";
 
-import { createTransaction } from "@/actions/transaction";
+import { createTransaction, updateTransaction } from "@/actions/transaction";
 import { transactionSchema } from "@/app/lib/schema";
 import CreateAccountDrawer from "@/components/create-account-drawer";
 import { Button } from "@/components/ui/button";
@@ -23,15 +23,19 @@ import { Textarea } from "@/components/ui/textarea";
 import useFetch from "@/hooks/use-fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { CalendarIcon, Loader2 } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import ReceiptScanner from "./receipt-scanner";
 
-const AddTransactionForm = ({ accounts, categories }) => {
+const AddTransactionForm = ({ accounts, categories, editMode= false, initialData = null }) => {
   const router = useRouter();
+
+  const searchParams = useSearchParams();
+  const editId = searchParams.get("edit");
+
   const {
     register,
     setValue,
@@ -41,21 +45,36 @@ const AddTransactionForm = ({ accounts, categories }) => {
     handleSubmit,
   } = useForm({
     resolver: zodResolver(transactionSchema),
-    defaultValues: {
-      type: "EXPENSE",
+    defaultValues:
+      editMode && initialData?{
+         type: initialData.type,
+         amount: initialData.amount.toString(),
+         description: initialData.description,
+         accountId: initialData.accountId,
+         category: initialData.category,
+         date: new Date(initialData.date),
+         isRecurring: initialData.isRecurring,
+         ...(initialData.recurringInterval && {
+          recurringInterval: initialData.recurringInterval,
+         }),
+
+      }:{
+
+          type: "EXPENSE",
       amount: "",
       description: "",
       accountId: accounts.find((ac) => ac.isDefault)?.id,
       date: new Date(),
       isRecurring: false,
-    },
+
+      }
   });
 
   const {
     loading: transactionLoading,
     fn: transactionFn,
     data: transactionResult,
-  } = useFetch(createTransaction);
+  } = useFetch( editMode ? updateTransaction: createTransaction );
 
   const type = watch("type");
   const isRecurring = watch("isRecurring");
@@ -71,18 +90,22 @@ const AddTransactionForm = ({ accounts, categories }) => {
       amount: parseFloat(data.amount)
     };
 
-     transactionFn(formData);
+    if(editMode){
+        transactionFn(editId, formData);
+    }else{
+      transactionFn(formData);
+    }
   }
 
   useEffect(()=>{
 
     if(transactionResult?.success && !transactionLoading){
-        toast.success("Transaction created successfully!");
+        toast.success(editMode?"Transaction updated Successfully!":"Transaction created successfully!");
         reset();
         router.push(`/account/${transactionResult.data.accountId}`);
     }
      
-  },[transactionResult,transactionLoading])
+  },[transactionResult,transactionLoading,editMode])
 
   const handleScanComplete = async(scannedData)=>{
     setValue("amount", scannedData.amount.toString());
@@ -108,7 +131,7 @@ const AddTransactionForm = ({ accounts, categories }) => {
         <label className="text-md font-medium text-gray-800 dark:text-gray-300">
           Type
         </label>
-        <Select className="" defaultValue={"EXPENSE"} onValueChange={(value) => setValue("type", value)}>
+        <Select className="" defaultValue={type} onValueChange={(value) => setValue("type", value)}>
           <SelectTrigger className="mt-2 border-2 w-full border-gray-400 dark:border-gray-700">
             <SelectValue placeholder="Select Type" />
           </SelectTrigger>
@@ -148,6 +171,7 @@ const AddTransactionForm = ({ accounts, categories }) => {
           <Select
             className=""
             onValueChange={(value) => setValue("accountId", value)}
+            defaultValue={accounts.find((ac) => ac.isDefault)?.id}
           >
             <SelectTrigger className="mt-2 border-2 w-full border-gray-400 dark:border-gray-700">
               <SelectValue placeholder="Select Account" />
@@ -298,7 +322,7 @@ const AddTransactionForm = ({ accounts, categories }) => {
 
     <div className="flex gap-2">
       <Button onClick={()=>router.back()} className={'w-1/2 cursor-pointer'} type="button" variant={'destructive'}>Cancel</Button>
-      <Button disabled={transactionLoading} className={'w-1/2 bg-green-600 text-white hover:bg-green-700 hover:text-white cursor-pointer'} type="submit" variant='outline'>{transactionLoading? "Creating...":"Create Transaction"}</Button>
+      <Button disabled={transactionLoading} className={'w-1/2 bg-green-600 text-white hover:bg-green-700 hover:text-white cursor-pointer'} type="submit" variant='outline'>{transactionLoading? <><Loader2 className="h-3 w-3 animate-spin"/>{editMode?"Updating...":"Creating..."}</>:<>{editMode?"Update Transaction":"Create Transaction"}</>}</Button>
     </div>
     </form>
   );
