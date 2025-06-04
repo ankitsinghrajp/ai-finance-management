@@ -10,7 +10,7 @@ import Link from "next/link";
 export default function HOME() {
   return (
     <>
-      <div className="mt-20 px-4">
+      <div className="mt-20">
         <div className="fixed top-24 z-50 py-1 right-4">
           <ToggleTheme />
         </div>
